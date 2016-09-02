@@ -1,0 +1,28 @@
+
+--- related products --- 
+<!-- 
+   get all collections for the products and then products from within collections
+-->
+<h2>Related Products</h2>
+{% assign numCount = 0 %}
+<ul style="width:100%">
+{% for collection in product.collections %}
+{% if collection.products_count > 0 %}  
+{% for cproduct in collection.products %}
+   {% if cproduct.handle == product.handle %}{% continue %}{% endif %}
+   <li style="width:125px; float:left; list-style:none">
+     <div class="image">
+       <a href="{{ cproduct.url | within: collection }}" title="{{ cproduct.title | escape }}">
+         {{ cproduct.featured_image | product_img_url: image_size | img_tag }}
+       </a>
+     </div>
+     <h4><a href="{{ cproduct.url }}" title="{{ cproduct.title | escape }}">{{ cproduct.title }}</a></h4>
+     <span class="money">{{ cproduct.price | money }}</span>
+   </li>
+   {% assign numCount = numCount | plus:1 %}
+   {% if numCount == 4 %}{% break %}{% endif %}
+{% endfor %} 
+{% endif %}
+{% if numCount == 4 %}{% break %}{% endif %}  
+{% endfor %}
+</ul>
