@@ -1,0 +1,225 @@
+--- collection.liquid
+{% comment %}
+  Collection template, used on collection.liquid and collection.image.liquid
+{% endcomment %}
+
+{% paginate collection.products by 20 %}
+
+<header class="section-header text-center">
+  <!-- <h1>{{ collection.title }}</h1> -->
+  <!-- <hr class="hr--small"> -->
+  {% if collection.description != blank %}
+    <div class="grid">
+      <div class="grid__item">
+        <div class="rte">
+          {{ collection.description }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if settings.collection_tags_enable %}
+    {% if collection.all_tags.size > 0 %}
+      {% comment %}
+        To provide a 'catch-all' link at the top of the list,
+        check against the collection.handle, product type, and vendor.
+      {% endcomment %}
+      <ul class="tags tags--collection inline-list">
+        <li{% unless current_tags %} class="tag--active"{% endunless %}>
+          {% comment %}
+            Good for /collections/all collection and regular collections
+          {% endcomment %}
+          {% if collection.handle %}
+            <a href="/collections/{{ collection.handle }}">
+              {{ 'collections.general.all_of_collection' | t }}
+            </a>
+
+          {% comment %}
+            Good for automatic type collections
+          {% endcomment %}
+          {% elsif collection.current_type %}
+            <a href="{{ collection.current_type | url_for_type }}">
+              {{ 'collections.general.all_of_collection' | t }}
+            </a>
+
+          {% comment %}
+            Good for automatic vendor collections
+          {% endcomment %}
+          {% elsif collection.current_vendor %}
+            <a href="{{ collection.current_vendor | url_for_vendor }}">
+              {{ 'collections.general.all_of_collection' | t }}
+            </a>
+          {% endif %}
+        </li>
+
+        {% for tag in collection.all_tags %}
+          {% if current_tags contains tag %}
+            <li class="tag--active">
+              {{ tag | link_to_remove_tag: tag }}
+            </li>
+          {% else %}
+            <li>
+              {% comment %}
+                Use link_to_add_tag if you want to allow filtering
+                by multiple tags
+              {% endcomment %}
+              {{ tag | link_to_tag: tag }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+
+  {% if settings.collection_tags_enable %}
+    <hr class="hr--small hr--clear">
+  {% endif %}
+</header>
+
+
+
+<div class="size-cat-select">
+  <ul>
+    <li>{% include 'category-tags' %}</li>
+    <li>{% include 'size-tags' %}</li>
+  </ul>
+</div>
+
+
+{% if settings.collection_products_grid == 'collage' %}
+  <div class="grid-uniform online-shop-section all-product">
+    {% comment %}
+      Loop through our products in the current collection.
+      See the snippet 'snippets/product-grid-collage.liquid'.
+
+      `is_reverse_row__product`, `three_row_index__product`, `collection_product_count`, and `divisible_by_three__product` are
+      all used by 'snippets/product-grid-collage.liquid'
+    {% endcomment %}
+    {% assign is_reverse_row__product = false %}
+    {% assign three_row_index__product = 0 %}
+    {% assign collection_product_count__product = collection.products.size %}
+    {% assign divisible_by_three__product = collection_product_count__product | modulo:3 %}
+    {% for product in collection.products %}
+    <div class="product" id="product-{{ forloop.index | plus:paginate.current_offset }}">
+                {% include 'product' with product %}
+            </div>
+      {% include 'product-grid-collage' %}
+    {% else %}
+
+      {% if shop.products_count == 0 %}
+
+        {% comment %}
+          Add default products to help with onboarding for collections/all only
+        {% endcomment %}
+        {% unless emptyState %}
+          {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+          {% assign emptyState = true %}
+        {% endunless %}
+
+        {% include 'onboarding-empty-collection' %}
+
+      {% else %}
+
+        {% comment %}
+          If collection exists but is empty, display message
+        {% endcomment %}
+        <div class="grid__item text-center">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endif %}
+
+    {% endfor %}
+
+  </div>
+{% elsif settings.collection_products_grid == 'grid' %}
+<div class="collection-matrix"> 
+  <div class="grid-uniform">
+    {% assign grid_item_width = 'medium--one-half large--one-quarter' %}
+    {% for product in collection.products %}
+      {% include 'product-grid-item' %}
+    {% else %}
+      {% if collection.handle == 'all' %}
+        {% comment %}
+          Add default products to help with onboarding for collections/all only
+        {% endcomment %}
+        {% unless emptyState %}
+          {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+          {% assign emptyState = true %}
+        {% endunless %}
+
+        {% include 'onboarding-empty-collection' %}
+
+      {% else %}
+
+        {% comment %}
+          If collection exists but is empty, display message
+        {% endcomment %}
+        <div class="grid__item text-center">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endif %}
+    {% endfor %}
+  </div>
+  
+ {% if paginate.next.is_link %}
+   <div class="more" style="float:left;width:100%">&darr; <a href="{{ paginate.next.url }}">More</a></div>        
+ {% endif %}
+  
+</div>  
+{% endif %}
+
+<div id="product-list-foot"></div>
+{% endpaginate %}
+
+---- theme.liquid
+{% if template == 'collection' %} 
+<script>
+var pInfScrLoading = false;
+var pInfScrDelay = 100;
+
+function pInfScrExecute() {
+  if($(document).height() - 800 < ($(document).scrollTop() + $(window).height())) {
+    var loadingImage;
+    pInfScrNode = $('.more').last(); 	
+    pInfScrURL1 = $('.more a').last().attr("href"); 
+    pInfScrURL = "https://buttergoods.myshopify.com".concat(pInfScrURL1); 
+    console.log(pInfScrURL);
+    if(!pInfScrLoading && pInfScrNode.length > 0 && pInfScrNode.css('display') != 'none') {
+      $.ajax({
+        type: 'GET',
+        url: pInfScrURL,
+        beforeSend: function() {
+          pInfScrLoading = true;
+          loadingImage = pInfScrNode.clone().empty().append('<img src=\"http://cdn.shopify.com/s/files/1/0068/2162/assets/loading.gif?105791\" />');
+          loadingImage.insertAfter(pInfScrNode);
+          pInfScrNode.hide();
+        },
+        success: function(data) {
+          // remove loading feedback
+          pInfScrNode.next().remove();
+          var filteredData = $(data).find(".main-content .wrapper .collection-matrix");
+          filteredData.insertBefore( $("#product-list-foot") );
+          loadingImage.remove();					
+          pInfScrLoading = false;
+        },
+        dataType: "html"
+      });
+    }
+  }
+}
+$(document).ready(function () { 
+  $(window).scroll(function(){
+    //$.doTimeout( 'scroll', pInfScrDelay, pInfScrExecute); 
+    setTimeout(pInfScrExecute, pInfScrDelay);
+    if( $(document).height() - 800 > $(document).scrollTop() + $(window).height() ) {
+      pInfScrDelay = 100; pInfScrExecute(); 
+    }
+  });
+});
+</script>  
+{% endif %}    
+
+
+
