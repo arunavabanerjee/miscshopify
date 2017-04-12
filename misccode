@@ -1,8 +1,8 @@
 
 --- related products --- 
-<!-- 
-   get all collections for the products and then products from within collections
--->
+<!-- get all collections for the products 
+  -- and then products from within collections 
+ -->
 <h2>Related Products</h2>
 {% assign numCount = 0 %}
 <ul style="width:100%">
