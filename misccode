@@ -26,3 +26,15 @@
 {% if numCount == 4 %}{% break %}{% endif %}  
 {% endfor %}
 </ul>
+
+//----------------------------------------------------------------------------
+<script>
+  $(document).ready(function(){  
+    $('.grid__item').each(function(index, element){ 
+      var deschtml = $(this).find('.product-desc .display_area').html();
+      $(this).find('.product-displaydesc').append(deschtml);
+    });
+  });
+</script> 
+
+
