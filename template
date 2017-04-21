@@ -1,0 +1,546 @@
+
+{% comment %}
+Source: https://gist.github.com/carolineschnapp/9122054
+If you are not on a collection page, do define which collection to use in the order form.
+Use the following assign statement, replace 'your-collection-handle-here' with your collection handle.
+{% assign collection = collections.your-collection-handle-here %}
+Use the assign statement outside of this comment block at the top of your template.
+{% endcomment %}
+
+{% assign collection = collections.sgna %}
+{% assign textprods = "" %}
+
+{% paginate collection.products by 100 %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+       var n1 = Math.round(Math.random() * 10 + 1);
+     	   var n2 = Math.round(Math.random() * 10 + 1);
+   	   $("#question").val(n1 + " + " + n2);
+  	   $(".contact-form").submit(function (e) {
+          if (eval($("#question").val()) != $("#answer").val()) {
+            $("#answer").css('box-shadow', '0px 0px 7px red');
+            e.preventDefault(); 
+          } 
+       });
+    });
+</script>
+
+<div class="wrapper order-samples">
+
+  <header class="section-header">
+    <h1 class="section-header__title">
+      {% if template contains 'page' %}
+        {{ page.title }}
+      {% else %}
+        {{ collection.title }}
+      {% endif %}
+    </h1>
+  </header>
+
+  {% if template contains 'page' and page.content.size > 0 %}
+    <div class="rte">
+      {{ page.content }}
+    </div>  
+  {% elsif collection.description.size > 0 %}
+    <div class="rte">
+      {{ collection.description }}
+    </div>
+  {% endif %}
+
+  {% if collection.products_count > 0 %}
+
+     {% form 'contact' %}
+      
+      <input type="hidden" name="contact[form]" value="Free Samples Request-SGNA">
+
+      {% if form.posted_successfully? %}
+        <p class="note form-success">
+          {{ 'contact.form.post_success' | t }}
+        </p>
+      {% endif %}
+
+      {{ form.errors | default_errors }}
+  
+      <div class="section-products">
+        <p>Select the samples you would like to receive.</p>
+        {% for tag in collection.all_tags %}
+          {% if tag == 'Enzymatic Sponges' %}{% continue %}{% endif %}
+          <div class="row">
+            <h2 class="grid__title">{{ tag }}</h2>
+            <div class="grid__row">
+            {% for product in collection.products %}            
+              {% if product.tags contains tag and product.available %}
+                {% assign prods = textprods | split : ',' %} 
+                {% assign flag = 0 %}
+                {% for item in prods %}
+                  {% if product.handle == item %}{% assign flag = 1 %}{% break %}{% endif %}
+                {% endfor %} 
+                {% if flag == 1 %}{% continue %}{% endif %}
+                {% assign textprods = textprods | append: product.handle | append: ',' %}
+                <div class="grid__item">
+                  <label for="product-{{ product.handle }}">
+                    <img src="{{ product.featured_image.src | product_img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" />
+                    <input type="checkbox" id="product-{{ product.handle }}" name="contact[{{ product.handle }}]" value="yes">
+                    <div class="popOverlay"></div>
+                    {{ product.title }}
+                  </label>
+                  <div class="product-desc" style="display:none;">{{product.description}}</div>
+                  
+                  <a href="#url" class="dtl1">
+                    product details
+                  </a>
+                  <a href="#url" class="dtl2">
+                    product details
+                  </a>
+                  
+                  <div class="clickDv3">
+                      <div class="clickDvinner">                                  
+                          <div class="product-displaydesc"><h2>{{ product.title }}</h2></div>
+                          <div class="popLeft">
+                              <div class="section__contact-form">  
+                                
+                               {% form 'contact' %}
+      
+                                <input type="hidden" name="contact[form]" value="Free Samples Request-SGNA">
+
+                                 {% if form.posted_successfully? %}
+                                 <p class="note form-success">
+                                   {{ 'contact.form.post_success' | t }}
+                                 </p>
+                                 {% endif %}
+
+                                 {{ form.errors | default_errors }}
+  
+
+                                  <header>
+                                      <h2>Samples must be sent to place of business.</h2>
+                                      <p>All information sent to Ruhof is kept confidential and is never sold.</p>
+                                  </header>
+
+                                  {% assign name_attr = 'contact.form.name' | t | handle %}
+                                
+                                  <input type="hidden" id="product-{{ product.handle }}" name="contact[{{ product.handle }}]" value="yes">
+                                
+                                  <input type="text" id="ContactFormName" name="contact[{{ name_attr }}]" class="required" required placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+
+                                  <input type="text" id="ContactFormTitle" name="contact[title]" placeholder="Title" autocapitalize="words" value="{% if form[title] %}{{ form[title] }}{% elsif customer %}{{ customer.title }}{% endif %}">
+
+                                  <input type="email" id="ContactFormEmail" name="contact[email]" class="required" required placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+
+                                  {% assign name_attr = 'contact.form.phone' | t | handle %}
+                                  <input type="tel" id="ContactFormPhone" name="contact[{{ name_attr }}]" class="required" required placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.default_address.phone }}{% endif %}">
+
+                                  <input type="text" id="ContactFormAddress" name="contact[address]" class="required" required placeholder="{{ 'customer.addresses.address1' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[address] %}{{ form[address] }}{% elsif customer %}{{ customer.default_address.address1 }}{% endif %}">
+
+                                  <input type="text" id="ContactFormAddress2" name="contact[address2]" placeholder="{{ 'customer.addresses.address2' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[address2] %}{{ form[address2] }}{% elsif customer %}{{ customer.default_address.address2 }}{% endif %}">
+                                
+                                  <input type="text" id="ContactFormDepartment" name="contact[department]" placeholder="Company" autocapitalize="words" value="{% if form[department] %}{{ form[department] }}{% elsif customer %}{{ customer.department }}{% endif %}">
+
+        						  <input type="text" id="ContactFormCity" name="contact[city]" class="required" required placeholder="{{ 'customer.addresses.city' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[city] %}{{ form[city] }}{% elsif customer %}{{ customer.default_address.city }}{% endif %}">
+
+        						  <input type="text" id="ContactFormState" name="contact[state]" class="required" required placeholder="{{ 'customer.addresses.province' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[state] %}{{ form[state] }}{% elsif customer %}{{ customer.default_address.province }}{% endif %}">
+
+        						  <input type="text" id="ContactFormCountry" name="contact[country]" class="required" required placeholder="{{ 'customer.addresses.country' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[country] %}{{ form[country] }}{% elsif customer %}{{ customer.default_address.country }}{% endif %}">
+
+        						  <input type="text" id="ContactFormZipCode" name="contact[zip]" class="required" required placeholder="{{ 'customer.addresses.zip' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[zip] %}{{ form[zip] }}{% elsif customer %}{{ customer.default_address.zip }}{% endif %}">
+                             
+                                
+                                  <div class="form-footer">
+                                      <p><small>Your sample will be shipped within 24 hours via UPS or FedEx. All samples are shipped with Safety Data Sheets and all necessary information. Please allow 5-6 business days for delivery.</small></p>
+                                      <input type="submit" class="btn" value="Submit Order">
+                                  </div>
+                                
+                                {% endform %}
+                                
+                              </div>
+                          </div>  
+
+                          <div class="cross"><img src="{{ 'fancy_close.png' | asset_url }}" alt=""></div>  
+                      </div>
+
+                  </div>
+                  
+                  <div class="clickDv">
+                    <div class="clickDvinner">                                  
+                      <div class="product-displaydesc"><h2>{{ product.title }}</h2></div>
+                        
+      
+         <div class="cross"><img src="{{ 'fancy_close.png' | asset_url }}" alt=""></div>  
+      </div>
+                    
+ 
+                    
+                </div>
+                  
+                  </div>
+              {% endif %}
+            {% endfor %}
+              
+           </div>
+          </div>
+        <div class="fnshBtn">Finish</div>
+        <div class="clearBtn">Clear</div>
+        {% endfor %}
+      </div>
+		<div class="clickDv2">
+                    <div class="clickDvinner">                                  
+                      
+                      <div class="popLeft">
+						<div class="section__contact-form">                
+                          
+        <header>
+          <h2>Samples must be sent to place of business.</h2>
+          <p>All information sent to Ruhof is kept confidential and is never sold.</p>
+        </header>
+		
+        {% assign name_attr = 'contact.form.name' | t | handle %}
+        <input type="text" id="ContactFormName" name="contact[{{ name_attr }}]" class="required" required placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+
+        <input type="text" id="ContactFormTitle" name="contact[title]" placeholder="Title" autocapitalize="words" value="{% if form[title] %}{{ form[title] }}{% elsif customer %}{{ customer.title }}{% endif %}">
+
+        <input type="email" id="ContactFormEmail" name="contact[email]" class="required" required placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+
+        {% assign name_attr = 'contact.form.phone' | t | handle %}
+        <input type="tel" id="ContactFormPhone" name="contact[{{ name_attr }}]" class="required" required placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.default_address.phone }}{% endif %}">
+
+        <input type="text" id="ContactFormAddress" name="contact[address]" class="required" required placeholder="{{ 'customer.addresses.address1' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[address] %}{{ form[address] }}{% elsif customer %}{{ customer.default_address.address1 }}{% endif %}">
+
+        <input type="text" id="ContactFormAddress2" name="contact[address2]" placeholder="{{ 'customer.addresses.address2' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[address2] %}{{ form[address2] }}{% elsif customer %}{{ customer.default_address.address2 }}{% endif %}">
+
+        <input type="text" id="ContactFormDepartment" name="contact[department]" placeholder="Company" autocapitalize="words" value="{% if form[department] %}{{ form[department] }}{% elsif customer %}{{ customer.department }}{% endif %}">
+
+        <input type="text" id="ContactFormCity" name="contact[city]" class="required" required placeholder="{{ 'customer.addresses.city' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[city] %}{{ form[city] }}{% elsif customer %}{{ customer.default_address.city }}{% endif %}">
+
+		<input type="text" id="ContactFormState" name="contact[state]" class="required" required placeholder="{{ 'customer.addresses.province' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[state] %}{{ form[state] }}{% elsif customer %}{{ customer.default_address.province }}{% endif %}">
+
+        <input type="text" id="ContactFormCountry" name="contact[country]" class="required" required placeholder="{{ 'customer.addresses.country' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[country] %}{{ form[country] }}{% elsif customer %}{{ customer.default_address.country }}{% endif %}">
+
+        <input type="text" id="ContactFormZipCode" name="contact[zip]" class="required" required placeholder="{{ 'customer.addresses.zip' | t }}" autocorrect="off" autocapitalize="off" value="{% if form[zip] %}{{ form[zip] }}{% elsif customer %}{{ customer.default_address.zip }}{% endif %}">
+                          
+                          
+        <div class="form-footer">
+          <p><small>Your sample will be shipped within 24 hours via UPS or FedEx. All samples are shipped with Safety Data Sheets and all necessary information. Please allow 5-6 business days for delivery.</small></p>
+          <input type="submit" onclick='return CheckFormSubmit();' class="btn" value="Submit Order">
+        </div>
+      </div>
+      </div>  
+      
+         <div class="cross"><img src="{{ 'fancy_close.png' | asset_url }}" alt=""></div>  
+      </div>
+                    
+ 
+                    
+                </div>
+     {% endform %}  
+
+  {% else %}
+    <p>There are no products available.</p>
+  {% endif %}
+	
+</div>
+
+{% endpaginate %}
+<script>
+  var current_url  = window.location.href;
+  var product_url = current_url.split("?current_product=");
+  var product_url = product_url[1];
+  document.getElementById(product_url).checked = true;
+</script>
+
+{% comment %}{% if collection.products_count > 0 %}
+<script>
+Shopify.itemsToAdd = [];
+Shopify.addItemstoTheCart = function() {
+  if (Shopify.itemsToAdd.length) {
+    var item = Shopify.itemsToAdd.pop();
+    $.ajax({
+      url: '/cart/add',
+      dataType: 'json',
+      type: 'post',
+      data: item,
+      success: Shopify.addItemstoTheCart,
+      error: Shopify.addItemstoTheCart
+    });
+  }
+  else {
+    window.location.href = '/cart';
+  }
+};
+jQuery(function($) {
+  $('table .quantity:first').focus();
+  $('[max]').change(function() {
+    var max = parseInt($(this).attr('max'), 10);
+    var value = parseInt($(this).val(), 10) || 0;
+    if (value > max) { 
+      alert('We only have ' + max + ' of this item in stock');
+      $(this).val(max); 
+    }    
+  });
+  $('.add-to-cart-order-form').click(function() {
+    $('.add-to-cart-order-form').addClass('disabled').attr('disabled','disabled');
+    // Resetting.
+    Shopify.itemsToAdd = [];
+    $('.quantity').each(function() {
+      var quantity = parseInt($(this).val(), 10);
+      if (quantity) {
+        Shopify.itemsToAdd.push( { id: $(this).attr('data-id'), quantity: quantity } );
+      }
+    });     
+    if (Shopify.itemsToAdd.length) {
+      Shopify.addItemstoTheCart();
+    }
+    else {
+      alert('All quantities are set to zero.');
+      $('.add-to-cart-order-form').removeAttr('disabled').removeClass('disabled');
+    }
+  });
+});
+</script>
+{% endif %}{% endcomment %}
+
+<script type="text/javascript">
+  function CheckFormSubmit() {
+    var oneChecked = false;
+      $("input[type='checkbox']").each(function(index, element){
+        if(element.checked){
+          oneChecked = true;
+        } 
+      });
+    if(oneChecked == false) {
+          alert('You need to select atleast one product.');
+          return false;
+    }  
+
+  }
+</script>
+
+<script>
+  $(document).ready(function(){  
+    $('.grid__item').each(function(index, element){ 
+      var deschtml = $(this).find('.product-desc .display_area').html();
+      $(this).find('.product-displaydesc').append(deschtml);
+    });
+    
+   	$('.fnshBtn').click(function() {
+      $('.clickDv2').show();
+    });
+    
+    $('.grid__item .dtl1').click(function() {
+      $(this)
+        .siblings('.clickDv3')
+        .show();
+    });
+    $('.grid__item .dtl2').click(function() {
+      $(this)
+        .siblings('.clickDv')
+        .show();
+    });
+    
+    $('.grid__item label input').click(function() {
+      $(this)
+        .siblings('.popOverlay')
+        .toggle();
+    });
+    
+    
+    $('.cross').click(function() {
+      $('.clickDv').hide();
+      $('.clickDvinner').addClass('closePop');
+      $('.clickDv2').hide();
+      $('.clickDv3').hide();
+    });
+    
+    $('input[type=checkbox]').change(function(){
+      //alert($('input[type=checkbox].one:checked').size())
+      if($('input[type=checkbox]:checked').size() > 1){
+      $(".dtl2").show();
+      $(".dtl1").hide();
+      $(".fnshBtn").show();  
+      $(".clearBtn").show();  
+      }
+      else {
+          $(".dtl1").show();
+      	  $(".dtl2").hide();
+       	  $(".fnshBtn").hide();
+          $(".clearBtn").hide(); 	
+      }
+    });
+    $('.clearBtn').click(function() {
+      $('input[type=checkbox]').prop("checked", false);
+      $(".popOverlay").hide();
+      $(".clearBtn").hide();
+      $(".fnshBtn").hide();
+    });
+    
+    $('.clickDv2 input[type=submit]').click(function(){
+     var contact = { form: 'Free Samples Request-SGNA', 
+                     name: $('.clickDv2 #ContactFormName').val(), 
+                     title: $('.clickDv2 #ContactFormTitle').val(),
+                     email: $('.clickDv2 #ContactFormEmail').val(),
+                     phonenumber: $('.clickDv2 #ContactFormPhone').val(), 
+                     address: $('.clickDv2 #ContactFormAddress').val(),
+                     address2: $('.clickDv2 #ContactFormAddress2').val(), 
+                     department: $('.clickDv2 #ContactFormDepartment').val(), 
+                     city: $('.clickDv2 #ContactFormCity').val(),
+                     state: $('.clickDv2 #ContactFormState').val(),
+                     country: $('.clickDv2 #ContactFormCountry').val(), 
+                     zip: $('.clickDv2 #ContactFormZipCode').val() 
+                   };
+     $('.grid__item input[type=checkbox]').each(function(){ 
+       if( $(this).is(':checked') ){
+         var itemid = $(this).prop('id');
+         var itemarr = {itemid: 'yes'};
+         $.extend(contact, itemarr);  
+       }
+     });
+      
+     post('https://www.ruhof.com/contact#contact_form',contact);
+      
+    });
+  });
+  
+function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}  
+  
+</script>  
+
+<style type="text/css">
+  .order-samples .section-products{ width:100%; }
+  .section-products:not(.grid-with-sidebar) .grid__item{ width:30%; float:none; display:inline-block; }
+  .clickDv{ width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; position:fixed; top:0;left:0; z-index:9999; }
+  .clickDv2{ width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; position:fixed; top:0;left:0; z-index:9999; }
+  .clickDv3{ width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; position:fixed; top:0;left:0; z-index:9999; }
+  .cross{ position:absolute; top:-10px; right:-14px; cursor:pointer; }
+  .cross img{ width:30px !important; }
+  .order-samples .grid__item img{ width:70%; height:100%; object-fit:contain; }
+  .grid__item a{ margin-top:20px;   background-color: #ed1c2e;
+    border: 0;
+    border-radius: 0;
+    color: white;
+    cursor: pointer;
+    font-family: "proxima-nova", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.75em 1.5em;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 150ms ease;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+  .popLeft{ width:100%; float:right; }
+  .product-displaydesc{ width:100%; font-size:16px; line-height:24px; overflow-y:auto; float:right; text-align:justify;left:0;top:0; height:100%; color:#FFF;padding:20px 20px; background:#be1625; }
+  .order-samples .section__contact-form{ width:100%; }
+  .section__contact-form h2{  font-size:19px; text-align:center; }
+  .section__contact-form p{ font-size:14px; text-align:center; }
+  .section__contact-form input{ width:48%; float:left; margin-right:7px; }
+  .section__contact-form input:last-child{ float:none; display:block; margin:auto; }
+  .clickDv3 .section__contact-form input[ type="submit" ]{ display:inline-block; float:none;}
+  .form-footer{ width:100%; float:left; }
+  .form-success{ display:none; }
+  .section-products:not(.grid-with-sidebar) .grid__item{ position:relative; }
+  .grid__item label input{ width:100%; height:75%; position:absolute; left:0; top:0; visibility:collapse; }
+  .popOverlay{ display:none; width:100%; height:75%; position:absolute; left:0; top:0; background:rgba(151, 173, 216, 0.45); }
+  .fnshBtn{ 
+    margin-top: 20px;
+    background-color: #25aae1;
+    border: 0;
+    border-radius: 0;
+    color: white;
+    cursor: pointer;
+    float: right;
+    font-family: "proxima-nova", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.75em 2em;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 150ms ease;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    position:fixed;
+    bottom:10%;
+    right:4%;
+    display:none;
+}
+  .clearBtn{margin-top: 20px;
+    background-color: #ccc;
+    border: 0;
+    border-radius: 0;
+    color: #000;
+    cursor: pointer;
+    float: right;
+    font-family: "proxima-nova", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.75em 2em;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 150ms ease;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    position:fixed;
+    bottom:10%;
+    right:13%;
+    width:121px;
+    display:none;}
+  @keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1);
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1);   
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1);
+    transition: all 200ms ease-in;
+    transform: scale(1);
+  }
+}
+  .order-samples .grid__item label{ height:350px; margin-bottom:75px; }
+  .clickDvinner{ width:50%; animation: 1s fadeIn;display:flex;
+  animation-fill-mode: forwards;padding: 30px; background:#FFF; position:relative; border:#be1625 3px solid; margin:58px auto 0; border-radius:10px; }
+	 .clickDv .clickDvinner{ padding: 0; }
+  .dtl2{ display:none; }
+  .clickDv3 .clickDvinner{ width:65%; display:inline-block; }
+  .clickDv3 .popLeft{ width:47%; float:right; }
+  .clickDv3 .product-displaydesc{ width:47%; font-size:16px; line-height:24px; overflow-y:auto; float:right; text-align:justify; position:absolute;left:0;top:0; height:100%; color:#FFF;padding:20px 20px 10px; background:#be1625; }
+</style>  
+
+
+
+
