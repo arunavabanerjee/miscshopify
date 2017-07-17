@@ -306,6 +306,30 @@
 	});
 </script>
 
+=========================================================================================
+	
+{% if template == 'index' %}
+<script type="text/javascript">
+jQuery(document).ready(function(){  
+
+ var urlstr = window.location.href; 
+ if(urlstr.indexOf("discount") > 0){
+   var urlArr = urlstr.split('=');
+   var discode = urlArr[1];
+   if(urlArr[1].indexOf("&") > 0 ){ 
+     var newVal = urlArr[1].split('&'); 
+     discode = newVal[0];
+   }
+    
+   jQuery('#enterDiscount').val(discode);
+   jQuery(".discount-btn").trigger('click');
+   
+  
+ }
+});  
+</script>
+{% endif %} 
+  
        
        
        
