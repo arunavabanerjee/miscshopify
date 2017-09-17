@@ -1,0 +1,198 @@
+<div class="collection-page-width">
+<div class="hero one hero--{{ section.settings.hero_size }}
+     {% if section.settings.title != blank or section.settings.text != blank or section.settings.button_label != blank %} hero__overlay{% endif %} box ratio-container lazyload js"
+     {% if section.settings.image %}
+     data-bgset="{% include 'bgset', image: section.settings.image %}"
+     data-sizes="auto"
+     data-parent-fit="cover"
+     style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image | img_url: '300x300' }});"
+     {% endif %}>
+  {% if section.settings.image == blank %}
+    <div class="placeholder-background">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+  <div class="hero__inner first_text">
+    <div class="page-width text-center">
+      {% if section.settings.title != blank %}
+        <h2 class="h1 mega-title{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero__inner button-div">
+   <div class="page-width text-center">              
+   {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+   <a href="{{ section.settings.button_link }}" class="btn hero__btn">
+     {{ section.settings.button_label | escape }}
+   </a>
+   </div>
+  </div>  
+ {% endif %}  
+</div>
+<div class="hero two hero--{{ section.settings.hero_size }}
+     {% if section.settings.title != blank or section.settings.text != blank or section.settings.button_label != blank %} hero__overlay{% endif %} box ratio-container lazyload js"
+     {% if section.settings.image1 %}
+     data-bgset="{% include 'bgset', image: section.settings.image1 %}"
+     data-sizes="auto"
+     data-parent-fit="cover"
+     style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image1 | img_url: '300x300' }});"
+     {% endif %}>
+  {% if section.settings.image1 == blank %}
+    <div class="placeholder-background">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+  <div class="hero__inner second_text">
+    <div class="page-width text-center">
+      {% if section.settings.title1 != blank %}
+        <h2 class="h1 mega-title{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ section.settings.title1 | escape }}</h2>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</div>  
+
+<noscript>
+  <div class="hero hero--{{ section.settings.hero_size }}{% if section.settings.title != blank or section.settings.text != blank or section.settings.button_label != blank %} hero__overlay{% endif %}"{% if section.settings.image %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>
+</noscript>
+
+{% schema %}
+  {
+    "name": "TwoImages Text Overlay",
+    "class": "index-section index-section--flush",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Image alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Spring 2017 Collection"
+      },
+      {
+        "type": "image_picker",
+        "id": "image1",
+        "label": "Image_1"
+      },
+      {
+        "type": "select",
+        "id": "alignment1",
+        "label": "Image_1_alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "title1",
+        "label": "Heading_1",
+        "default": "Spring 2018 Collection"
+      },
+      {
+        "type": "select",
+        "id": "hero_size",
+        "label": "Section height",
+        "default": "medium",
+        "options": [
+          {
+            "label": "Extra Small",
+            "value": "x-small"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra Large",
+            "value": "x-large"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "text_size",
+        "label": "Text size",
+        "default": "medium",
+        "options": [
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button label"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "TwoImages Text Overlay",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+.one { width: 50% !important; height:1030px !important; float:left; }
+.first_text{ vertical-align:top; padding-top:10px; }
+.first_text .text-center { text-align:left !important; }
+.two { width: 50% !important; height:1030px !important; float:right; }
+.second_text{ vertical-align:top; padding-top:10px; }
+.second_text .text-center { text-align:left !important; }
+.button-div{ vertical-align:bottom; }
+{% endstylesheet %}
