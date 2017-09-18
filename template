@@ -1,5 +1,44 @@
 
 {% comment %}
+ Related Products Section
+{% endcomment %}
+
+<div class="products-related-products">
+{% for tag in product.tags %} 
+ <div class="gallery">
+  <div class="related-products">
+  {% for product in collection.products %}
+    {% if product.tags contains tag %}
+      {{ product.title }}
+    {% endif %}
+  {% endfor %}
+  </div>
+ </div>    
+{% endfor %}  
+</div>
+
+===================================================
+
+<div class="products-related-products">
+{% for tag in collection.all_tags %}
+ {{ tag }}
+   
+ <div class="gallery">
+  <div class="related-products">
+  {% for product in collection.products %}
+    {% if product.tags contains tag %}
+      {{ product.title }}
+    {% endif %}
+  {% endfor %}
+  </div>
+ </div>
+
+{% endfor %}  
+</div>
+
+=====================================
+
+{% comment %}
 Source: https://gist.github.com/carolineschnapp/9122054
 If you are not on a collection page, do define which collection to use in the order form.
 Use the following assign statement, replace 'your-collection-handle-here' with your collection handle.
