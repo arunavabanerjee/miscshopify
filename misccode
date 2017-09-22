@@ -1,4 +1,19 @@
 
+//list of all posts in blog
+{% for link in linklists.blogs.links %}
+  <a href="{{ link.url }}">{{ link.title }}</a>
+
+  {% assign blog = link.object %}
+
+  {% for article in blog.articles %}
+    {{ article.title }}
+  {% endfor %} 
+
+  <br/><br/>
+{% endfor %}
+
+
+
 //change select option to ul-li in product details page
 
 $('.product-form__item ul.product-form__input li').click(function(){
