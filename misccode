@@ -1,4 +1,28 @@
 
+//change select option to ul-li in product details page
+
+$('.product-form__item ul.product-form__input li').click(function(){
+  var liValue = $(this).val(); var ulIndex = $(this).parent().attr('data-index');
+
+  $('.product-form__item ul.product-form__input li').each(function(){
+    if($(this).parent().attr('data-index') == ulIndex){
+      $(this).removeClass('p-disble');
+    }
+  });
+
+  $(this).addClass('p-disble');
+
+  $('#ProductSelect-product-template option').each(function(){ 
+    var variantVal = $(this).text(); 
+    if( variantVal.indexOf(liValue) > 0 ){ //alert( $(this).val() ); 
+       $(this).attr('selected', 'selected');       
+    }
+  });
+
+});
+----------------------------------------------------------------
+
+
 ------- contactform submission -----------
     $('.clickDv2 input[type=submit]').click(function(){
      var contact = { form: 'Free Samples Request', 
