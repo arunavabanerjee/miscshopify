@@ -1,4 +1,16 @@
 
+{% for link in linklists.blogs.links %}
+  <a href="{{ link.url }}">{{ link.title }}</a>
+
+  {% assign blog = link.object %}
+
+  {% for article in blog.articles %}
+    {{ article.title }}
+  {% endfor %} 
+
+  <br/><br/>
+{% endfor %}
+
 //list of all posts in blog
 {% for link in linklists.blogs.links %}
   <a href="{{ link.url }}">{{ link.title }}</a>
