@@ -1,0 +1,29 @@
+
+https://help.shopify.com/en/themes/liquid/filters/html-filters
+
+<!-- image for category -->
+  <div id="PageContainer" class="page-container">
+
+    {% if template.name == "index" %}
+      {% section 'slideshow' %}
+    {% endif %}
+
+    <main class="main-content" role="main">
+      {% if collection.image %}
+  	    {{ collection.image | img_url: 'x500', crop: 'bottom' | img_tag: 'Collection Image', 'col-image' }}
+      {% endif %}
+     
+      {% unless template.name == "index" or template == "collection.image" %}
+        <div class="wrapper">
+      {% endunless %}
+        {{ content_for_layout }}
+      {% unless template.name == "index" or template == "collection.image" %}
+        </div>
+      {% endunless %}
+    </main>
+
+    <hr class="hr--large">
+
+    {% section 'footer' %}
+
+  </div>
