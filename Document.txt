@@ -27,3 +27,35 @@ https://help.shopify.com/en/themes/liquid/filters/html-filters
     {% section 'footer' %}
 
   </div>
+  
+  ---------------
+  
+    <div id="PageContainer" class="page-container">
+
+    {% if template.name == "index" %}
+      {% section 'slideshow' %}
+    {% endif %}
+
+    <main class="main-content" role="main">
+      {% if template == 'collection' %}
+      {% if collection.image %}
+  	    {{ collection.image | img_url: '500x500', crop: 'bottom' | img_tag: '', 'col-image' }}
+      {% else %}
+        {{ 'password-page-background.jpg' | asset_url: '500x500', crop: 'bottom' | img_tag: '', 'col-image' }} 
+      {% endif %}
+      {% endif %}
+     
+      {% unless template.name == "index" or template == "collection.image" %}
+        <div class="wrapper">
+      {% endunless %}
+        {{ content_for_layout }}
+      {% unless template.name == "index" or template == "collection.image" %}
+        </div>
+      {% endunless %}
+    </main>
+
+    <hr class="hr--large">
+
+    {% section 'footer' %}
+
+  </div>
