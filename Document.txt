@@ -1,4 +1,15 @@
 
+----
+theme settings : https://help.shopify.com/en/themes/development/theme-editor/settings-schema 
+edit language: https://lowest-internet-price.myshopify.com/admin/themes/43836014681/language?category=contact 
+liquid objects: https://help.shopify.com/en/themes/liquid/objects 
+
+
+
+
+
+------
+
 https://help.shopify.com/en/themes/liquid/filters/html-filters
 
 <!-- image for category -->
