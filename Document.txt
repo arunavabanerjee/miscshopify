@@ -10,6 +10,17 @@ liquid objects: https://help.shopify.com/en/themes/liquid/objects
 
 ------
 
+{% if page.template_suffix == 'survey' %}
+  {% include 'footer_fullbg' %} 
+{% elsif page.template_suffix == 'surveystart' %}
+  {% include 'footer_fullbg' %} 
+{% else %}
+  {% include footer-layout %}
+{% endif %}
+
+
+-------
+
 https://help.shopify.com/en/themes/liquid/filters/html-filters
 
 <!-- image for category -->
