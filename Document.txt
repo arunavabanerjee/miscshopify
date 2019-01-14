@@ -4,7 +4,8 @@ theme settings : https://help.shopify.com/en/themes/development/theme-editor/set
 edit language: https://lowest-internet-price.myshopify.com/admin/themes/43836014681/language?category=contact 
 liquid objects: https://help.shopify.com/en/themes/liquid/objects 
 brandpage: https://www.shopify.in/partners/blog/72313091-how-to-make-a-brands-or-trends-page-in-an-ecommerce-store-using-link-lists
-
+google ads : https://www.shopify.com/guides/google-shopping-guide/4-pla-set-up-and-account-creation
+https://help.shopify.com/en/manual/products/import-export/using-csv#csv-files
 
 
 
