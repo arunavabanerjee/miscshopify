@@ -3,6 +3,7 @@
 sales channel - instagram
 https://help.shopify.com/en/manual/sell-online/instagram/requirements
 https://help.shopify.com/en/manual/sell-online/online-sales-channels
+https://help.shopify.com/en/manual/sell-online/facebook-sales-channel
 
 ----
 theme settings : https://help.shopify.com/en/themes/development/theme-editor/settings-schema 
