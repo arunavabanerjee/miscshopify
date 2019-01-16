@@ -14,9 +14,6 @@ brandpage: https://www.shopify.in/partners/blog/72313091-how-to-make-a-brands-or
 google ads : https://www.shopify.com/guides/google-shopping-guide/4-pla-set-up-and-account-creation
 https://help.shopify.com/en/manual/products/import-export/using-csv#csv-files
 
-
-
-
 ------
 
 {% if page.template_suffix == 'survey' %}
