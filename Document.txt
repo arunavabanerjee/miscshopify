@@ -4,6 +4,7 @@ sales channel - instagram
 https://help.shopify.com/en/manual/sell-online/instagram/requirements
 https://help.shopify.com/en/manual/sell-online/online-sales-channels
 https://help.shopify.com/en/manual/sell-online/facebook-sales-channel
+https://blog.shakr.com/the-step-by-step-guide-shopfiy-and-instagram-integration/
 
 ----
 theme settings : https://help.shopify.com/en/themes/development/theme-editor/settings-schema 
