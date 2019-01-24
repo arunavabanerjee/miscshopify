@@ -5,3 +5,14 @@
     <!--show product details here -->
   {% endfor %}
 {% endpaginate %}
+
+//variants
+{% if product.has_only_default_variant %}
+  <input name="id" value="{{ variant.id }}" type="hidden">
+{% else %}
+  <select name="id">
+    {% for variant in product.variants %}
+      <option value="{{ variant.id }}">{{ variant.title }}</option>
+    {% endfor%}
+  </select>
+{% endif %}
