@@ -1,4 +1,17 @@
 
+//sort by
+{% assign products = collection.products | sort: 'price' %}
+{% for product in products %}
+  <h4>{{ product.title }}</h4>
+{% endfor %}
+
+<!-- products = "a", "b", "A", "B" -->
+{% assign products = collection.products | sort: 'title' %}
+{% for product in products %}
+   {{ product.title }}
+{% endfor %}
+
+
 //paginate
 {% paginate collection.products by 5 %}
   {% for product in collection.products %}
