@@ -1,0 +1,7 @@
+
+//paginate
+{% paginate collection.products by 5 %}
+  {% for product in collection.products %}
+    <!--show product details here -->
+  {% endfor %}
+{% endpaginate %}
