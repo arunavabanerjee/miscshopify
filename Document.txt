@@ -16,12 +16,12 @@ https://help.shopify.com/en/manual/products/import-export/using-csv#csv-files
 
 ------
 
-app dev
+app-dev
+----------
 http://gavinballard.com/building-shopify-apps-with-php/
 http://wern-ancheta.com/blog/2013/11/09/getting-started-with-shopify-app-development/
 http://blog.wissemriahi.com/2018/01/03/building-a-shopify-app-with-php/
-
-
+https://www.quora.com/How-can-I-create-a-Shopify-app-using-PHP
 
 -------
 
